@@ -1,16 +1,25 @@
 import { conn } from "../db/db.js";
+import jwt from 'jsonwebtoken';
 
-export const getCursos = async (req, res) => {
+export const loginUser = async (req, res) => {
+  let { user, password } = req.body;
   try {
-    const sql = await conn.query("SELECT * FROM users");
-    if (sql) {
-      console.log("datos recepcionados");
-      res.json(sql[0]);
+    const sql = await conn.query(
+      "SELECT * FROM users WHERE username = ? AND password = ?",
+      [user, password]
+    );
+
+    if (sql[0].length > 0) {
+      const token = jwt.sign({user},process.env.TOKEN_SECRET);
+      console.log(token)
+      res.cookie("jwt", token )
+      res.status(200).json({ msg: "Usuario encontrado",user: user});
+
     } else {
-      console.log("datos NO recepcionados");
+      res.status(404).json({ error: "Usuario no encontrado" });
     }
   } catch (error) {
-    console.log("datos NOOO recepcionados",error);
-
+    console.error("Error en la consulta SQL:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 };
