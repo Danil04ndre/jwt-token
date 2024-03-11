@@ -3,6 +3,7 @@ import routerLogin from "./src/routes/login-routes.js";
 import cors from "cors";
 import { config } from "dotenv";
 import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 
 
 
@@ -14,6 +15,17 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+app.get("/",(req,res) => {
+  try {
+    let validToken = jwt.verify(req.cookies.jwt, process.env.TOKEN_SECRET);
+    console.log(validToken,"token valido")
+    res.json({validToken,token: req.cookies.jwt});
+  } catch (error) {
+    console.log(error);
+    res.status(401).json({ msg: "TOKEN INVALID"});
+  }
+})
 app.use(routerLogin);
 
 app.listen(3000, () => {

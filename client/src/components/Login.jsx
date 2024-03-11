@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const initialForm = {
   user: "",
@@ -15,6 +16,7 @@ const Login = () => {
         [e.target.name]: e.target.value
     })
   };
+  const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -27,12 +29,16 @@ const Login = () => {
         body: JSON.stringify(form),
       }),
       json = await res.json();
-      console.log(json)
+      console.log(json);
+      if(json.msg){
+        navigate("/home");
+      }
     } catch (error) {
       console.log(error)
     }
   }
   return (
+ <>
     <form className="login-form" onSubmit={handleSubmit}>
       <label htmlFor="user">Nombre</label>
       <input type="text" id="user" name="user" onChange={handleForm}/>
@@ -40,6 +46,8 @@ const Login = () => {
       <input type="password" id="password" name="password" onChange={handleForm}/>
       <button type="submit">Iniciar</button>
     </form>
+    <img src="https://i.pinimg.com/736x/ee/0d/2a/ee0d2ae741c8eb0effd9cf99d459df4d.jpg" alt="" width="100px"/>
+    </>
   );
 };
 

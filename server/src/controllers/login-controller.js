@@ -11,10 +11,8 @@ export const loginUser = async (req, res) => {
 
     if (sql[0].length > 0) {
       const token = jwt.sign({user},process.env.TOKEN_SECRET);
-      console.log(token)
-      res.cookie("jwt", token )
+      res.cookie("jwt", token );
       res.status(200).json({ msg: "Usuario encontrado",user: user});
-
     } else {
       res.status(404).json({ error: "Usuario no encontrado" });
     }
@@ -23,3 +21,20 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+
+export const getUsers = async (req, res) => {
+  try {
+    const sql = await conn.query("SELECT * FROM users");
+    if (sql[0].length > 0) {
+  
+      res.status(200).json(sql[0]);
+    } else {
+      res.status(404).json({ error: "Usuario no encontrado" });
+    }
+  } catch (error) {
+    console.error("Error en la consulta SQL:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+}
+
+
