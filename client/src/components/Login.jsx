@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
+
 
 const initialForm = {
   user: "",
@@ -9,6 +11,7 @@ const initialForm = {
 
 const Login = () => {
   const [form, setform] = useState(initialForm);
+  const {user, setUser} = useContext(UserContext);
 
   const handleForm = (e) => {
     setform({
@@ -29,6 +32,7 @@ const Login = () => {
         body: JSON.stringify(form),
       }),
       json = await res.json();
+      setUser(json.user);
       console.log(json);
       if(json.msg){
         navigate("/home");

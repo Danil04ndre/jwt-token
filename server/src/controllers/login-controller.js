@@ -26,11 +26,10 @@ export const getUsers = async (req, res) => {
   try {
     const sql = await conn.query("SELECT * FROM users");
     if (sql[0].length > 0) {
-  
       res.status(200).json(sql[0]);
     } else {
       res.status(404).json({ error: "Usuario no encontrado" });
-    }
+    } 
   } catch (error) {
     console.error("Error en la consulta SQL:", error);
     res.status(500).json({ error: "Error interno del servidor" });

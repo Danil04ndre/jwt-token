@@ -23,7 +23,6 @@ app.get("/",(req,res) => {
     res.json({validToken,token: req.cookies.jwt});
   } catch (error) {
     console.log(error);
-    res.status(401).json({ msg: "TOKEN INVALID"});
   }
 })
 app.use(routerLogin);
